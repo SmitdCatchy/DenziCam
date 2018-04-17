@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">DenziCam</string>
+    <string name="txt_splash">Splash</string>
+    <string name="txt_menu_analyze">Analyze</string>
+    <string name="description_logo">logo</string>
+    <string name="txt_analyze_take">Take a Photo</string>
+</resources>

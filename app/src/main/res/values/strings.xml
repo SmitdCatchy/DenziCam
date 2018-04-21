@@ -4,4 +4,8 @@
     <string name="txt_menu_analyze">Analyze</string>
     <string name="description_logo">logo</string>
     <string name="txt_analyze_take">Take a Photo</string>
+    <string name="txt_analyze_color">Color</string>
+    <string name="txt_analyze_mark">Mark</string>
+    <string name="txt_analyze_undo">Undo</string>
+    <string name="txt_analyze_done">Analyze</string>
 </resources>

@@ -10,68 +10,68 @@
     tools:context="com.catchy.denzicam.AnalyzeActivity">
 
     <ImageView
-        android:id="@+id/imageAnalyzeBackground"
+        android:id="@+id/imgAnalyzeBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <Button
-        android:id="@+id/buttonAnalyzeTakePhoto"
+        android:id="@+id/btnAnalyzeTakePhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/button_menu"
-        android:text="@string/txt_analyze_take"
+        android:text="@string/analyze_take"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/buttonAnalyzeDone"
+        android:id="@+id/btnAnalyzeDone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/button_menu"
-        android:text="@string/txt_analyze_done"
+        android:text="@string/analyze_done"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/buttonAnalyzeMark"
+        android:id="@+id/btnAnalyzeMark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/button_menu"
-        android:text="@string/txt_analyze_mark"
+        android:text="@string/analyze_mark"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/buttonAnalyzeDone"
+        app:layout_constraintEnd_toStartOf="@+id/btnAnalyzeDone"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/buttonAnalyzeUndo"
+        android:id="@+id/btnAnalyzeUndo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/button_menu"
-        android:text="@string/txt_analyze_undo"
+        android:text="@string/analyze_undo"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonAnalyzeDone" />
+        app:layout_constraintStart_toEndOf="@+id/btnAnalyzeDone" />
 
     <TextView
-        android:id="@+id/textAnalyzeColor"
+        android:id="@+id/txtAnalyzeColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
@@ -80,6 +80,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="ASD" />
+
+    <SeekBar
+        android:id="@+id/skbAnalyze"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnAnalyzeDone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

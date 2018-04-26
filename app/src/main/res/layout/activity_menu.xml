@@ -10,11 +10,11 @@
     tools:context="com.catchy.denzicam.MenuActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/headerImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:contentDescription="@string/description_logo"
+        android:contentDescription="@string/menu_description_logo"
         android:scaleType="fitStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,19 +22,52 @@
         app:srcCompat="@drawable/logo" />
 
     <Button
-        android:id="@+id/buttonMenuAnalyze"
+        android:id="@+id/btnMenuAnalyze"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/button_menu"
-        android:text="@string/txt_menu_analyze"
+        android:text="@string/menu_analyze"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/btnMenuArchive"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headerImage" />
+
+    <Button
+        android:id="@+id/btnMenuArchive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button_menu"
+        android:text="@string/menu_archive"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/headerImage" />
+
+    <Button
+        android:id="@+id/btnMenuHelp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button_menu"
+        android:text="@string/menu_help"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMenuArchive" />
 
 
 </android.support.constraint.ConstraintLayout>

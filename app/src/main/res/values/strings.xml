@@ -1,11 +1,68 @@
 <resources>
     <string name="app_name">DenziCam</string>
-    <string name="txt_splash">Splash</string>
-    <string name="txt_menu_analyze">Analyze</string>
-    <string name="description_logo">logo</string>
-    <string name="txt_analyze_take">Take a Photo</string>
-    <string name="txt_analyze_color">Color</string>
-    <string name="txt_analyze_mark">Mark</string>
-    <string name="txt_analyze_undo">Undo</string>
-    <string name="txt_analyze_done">Analyze</string>
+    <string name="splash">Splash</string>
+
+    <string name="menu_analyze">Mérés</string>
+    <string name="menu_description_logo">logo</string>
+
+    <string name="analyze_take">Kép bevitele</string>
+    <string name="analyze_color">Szín</string>
+    <string name="analyze_mark">Maszk</string>
+    <string name="analyze_undo">Törlés</string>
+    <string name="analyze_done">Tovább</string>
+
+    <string name="chart_layer">layer</string>
+    <string name="chart_unmasked">Maszkolatlan</string>
+    <string name="chart_masked">Maszkolt</string>
+    <string name="chart_trees">Nincs bevitt adat.</string>
+    <string name="chart_data">adat</string>
+    <string name="chart_button">Eredmény megtekintése</string>
+    <string name="chart_add">Hozzáad</string>
+    <string name="chart_remove">Töröl</string>
+    <string name="chart_perimeter_hint">A fa kerülete cm-ben</string>
+
+    <string name="result_title">Eredmények</string>
+    <string name="result_average">A fák átlag életkora: </string>
+    <string name="result_percentage">A lombkorona borítása: </string>
+    <string name="result_oxygen">Megtermelt oxigén: </string>
+    <string name="result_carbon">Megkötött széndioxid: </string>
+    <string name="result_description">100 négyzetméreren egy vegetációs periódus alatt:</string>
+    <string name="result_save">Mentés</string>
+    <string name="result_dismiss">Elvetés</string>
+    <string name="result_gps">Koordináták hozzárendelése</string>
+    <string name="menu_help">Segédlet</string>
+    <string name="menu_archive">Archívum</string>>
+
+    <string-array name="trees">
+        <item>Ismeretlen</item>
+        <item>Akác</item>
+        <item>Bálványfa</item>
+        <item>Bükk</item>
+        <item>Csertölgy</item>
+        <item>Enyves éger</item>
+        <item>Ezüst hárs</item>
+        <item>Fehér fűz</item>
+        <item>Fehér nyár</item>
+        <item>Fehér vadgesztenye</item>
+        <item>Hegyi juhar</item>
+        <item>Japán akác</item>
+        <item>Keskenylevelű ezüstfa</item>
+        <item>Kislevelű hárs</item>
+        <item>Kocsányos tölgy</item>
+        <item>Kocsánytalan tölgy</item>
+        <item>Korai juhar</item>
+        <item>Közönséges dió</item>
+        <item>Közönséges gyertyán</item>
+        <item>Közönséges nyír</item>
+        <item>Magas kőris</item>
+        <item>Magyar kőris</item>
+        <item>Mezei juhar</item>
+        <item>Mezei szil</item>
+        <item>Nagylevelű hárs</item>
+        <item>Nyugati ostorfa</item>
+        <item>Vadcseresznye</item>
+        <item>Vénic szil</item>
+        <item>Virágos kőris</item>
+        <item>Zöld juhar</item>
+    </string-array>
 </resources>

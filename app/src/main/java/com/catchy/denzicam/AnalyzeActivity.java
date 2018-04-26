@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 
@@ -17,72 +18,70 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 public class AnalyzeActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Button btnPhoto;
+    private Button btnDone;
+    private Button btnMark;
+    private Button btnUndo;
     private ImageView background;
-    private TextView textColor;
-
-    private ArrayList<Bitmap> layers = new ArrayList<>();
-    private String pictureImagePath;
+    private TextView txtColor;
 
     private int pickedR;
     private int pickedG;
     private int pickedB;
-    private Button btnDone;
-    private Button btnMark;
-    private Button btnUndo;
+
+    private String pictureImagePath;
+
+    private int imageWidth;
+    private int imageHeight;
+
+    private ArrayList<int[]> layers = new ArrayList<>();
+
+    public static int[] layer;
+
+    private SeekBar skbTolerance;
+    private int tolerance = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analyze);
 
-        background = (ImageView) findViewById(R.id.imageAnalyzeBackground);
-        textColor = (TextView) findViewById(R.id.textAnalyzeColor);
+        background = findViewById(R.id.imgAnalyzeBackground);
+        txtColor = findViewById(R.id.txtAnalyzeColor);
 
-        btnPhoto = (Button) findViewById(R.id.buttonAnalyzeTakePhoto);
-        btnPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dispatchTakePictureIntent();
-            }
-        });
-        btnDone = (Button) findViewById(R.id.buttonAnalyzeDone);
-        btnMark = (Button) findViewById(R.id.buttonAnalyzeMark);
-        btnUndo = (Button) findViewById(R.id.buttonAnalyzeUndo);
-//        mainText = (TextView) findViewById(R.id.txtMain);
+        btnPhoto = findViewById(R.id.btnAnalyzeTakePhoto);
+        btnPhoto.setOnClickListener(view -> dispatchTakePictureIntent());
+
+        btnDone = findViewById(R.id.btnAnalyzeDone);
+        btnMark = findViewById(R.id.btnAnalyzeMark);
+        btnUndo = findViewById(R.id.btnAnalyzeUndo);
+
+        skbTolerance = findViewById(R.id.skbAnalyze);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) skbTolerance.setMin(10);
+        skbTolerance.setMax(100);
+        skbTolerance.setProgress(tolerance);
 
         btnDone.setVisibility(View.INVISIBLE);
         btnMark.setVisibility(View.INVISIBLE);
         btnUndo.setVisibility(View.INVISIBLE);
+        skbTolerance.setVisibility(View.INVISIBLE);
 
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+    private File createImageFile() {
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
+        File image = new File(storageDir, "temp.jpg");
         pictureImagePath = image.getAbsolutePath();
         return image;
     }
@@ -92,21 +91,13 @@ public class AnalyzeActivity extends AppCompatActivity {
 
         Intent chooser = new Intent(Intent.ACTION_CHOOSER);
         chooser.putExtra(Intent.EXTRA_INTENT, galleryIntent);
-        chooser.putExtra(Intent.EXTRA_TITLE, "Chhose");
+        chooser.putExtra(Intent.EXTRA_TITLE, "Válasz az alábbiak közül");
 
 
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-
-            }
-            // Continue only if the File was successfully created
+            File photoFile;
+            photoFile = createImageFile();
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "com.example.android.fileprovider",
@@ -116,63 +107,66 @@ public class AnalyzeActivity extends AppCompatActivity {
                 Intent[] intentArray = {cameraIntent};
                 chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
                 startActivityForResult(chooser, REQUEST_IMAGE_CAPTURE);
-//                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
     }
 
+    @SuppressLint("ShowToast")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-
             Bitmap bitmap = null;
 
             if (data == null || data.getData() == null) {
                 bitmap = BitmapFactory.decodeFile(pictureImagePath);
-
-//                ExifInterface ei = null;
-//                try {
-//                    ei = new ExifInterface(pictureImagePath);
-//                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-//                            ExifInterface.ORIENTATION_UNDEFINED);
-//
-//                    switch(orientation) {
-//
-//                        case ExifInterface.ORIENTATION_ROTATE_90:
-//                            bitmap = rotateBitmap(bitmap, 90);
-//                            break;
-//
-//                        case ExifInterface.ORIENTATION_ROTATE_180:
-//                            bitmap = rotateBitmap(bitmap, 180);
-//                            break;
-//
-//                        case ExifInterface.ORIENTATION_ROTATE_270:
-//                            bitmap = rotateBitmap(bitmap, 270);
-//                            break;
-//
-//                        case ExifInterface.ORIENTATION_NORMAL:
-//                        default:
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+                if (bitmap.getWidth() > bitmap.getHeight()) {
+                    Matrix matrix = new Matrix();
+                    matrix.setRotate(90);
+                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                }
 
             } else {
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                    if (bitmap.getWidth() > bitmap.getHeight()) {
+                        Matrix matrix = new Matrix();
+                        matrix.setRotate(90);
+                        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                    }
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 
-            layers.add(bitmap);
-            background.setImageBitmap(bitmap);
+            if (bitmap != null && bitmap.getWidth() > 720) {
+                float scale = 720.0f / (float) bitmap.getWidth();
+                int height = (int) (scale * bitmap.getHeight());
 
-            initiateMarking();
+                bitmap = Bitmap.createScaledBitmap(bitmap, 720, height, true);
+            }
+            if (bitmap != null && bitmap.getHeight() > 1280) {
+                float scale = 1280.0f / bitmap.getHeight();
+                int width = (int) (scale * bitmap.getWidth());
+
+                bitmap = Bitmap.createScaledBitmap(bitmap, width, 1280, true);
+            }
+            if(bitmap != null ) {
+                imageWidth = bitmap.getWidth();
+                imageHeight = bitmap.getHeight();
 
 
-        }
+                bitmap = Bitmap.createScaledBitmap(bitmap, imageWidth, imageHeight, true);
+
+                int[] layer = new int[imageWidth * imageHeight];
+                bitmap.getPixels(layer, 0, imageWidth, 0, 0, imageWidth, imageHeight);
+
+                layers.add(layer);
+                background.setImageBitmap(bitmap);
+
+                initiateMarking();
+            } else Toast.makeText(this, "Hiba merült fel a kép betöltése során.", Toast.LENGTH_SHORT).show();
+        } else Toast.makeText(this, "Hiba merült fel a kép betöltése során.", Toast.LENGTH_SHORT).show();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -181,122 +175,157 @@ public class AnalyzeActivity extends AppCompatActivity {
         btnDone.setVisibility(View.VISIBLE);
         btnMark.setVisibility(View.VISIBLE);
         btnUndo.setVisibility(View.VISIBLE);
-
-        background.setDrawingCacheEnabled(true);
-        background.buildDrawingCache(true);
-        background.setOnTouchListener(new View.OnTouchListener(){
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent){
-                if( motionEvent.getAction() == MotionEvent.ACTION_DOWN
+        skbTolerance.setVisibility(View.VISIBLE);
+        background.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN
                     || motionEvent.getAction() == MotionEvent.ACTION_MOVE
-                ){
+                    ) {
+                txtColor.setVisibility(View.VISIBLE);
+                background.setDrawingCacheEnabled(true);
+                background.buildDrawingCache(true);
+                Bitmap bitmap = background.getDrawingCache();
+                int pixel = bitmap.getPixel((int) motionEvent.getX(), (int) motionEvent.getY());
 
-                    Bitmap bitmap = background.getDrawingCache();
-                    int pixel = bitmap.getPixel((int)motionEvent.getX(),(int)motionEvent.getY());
+                pickedR = Color.red(pixel);
+                pickedG = Color.green(pixel);
+                pickedB = Color.blue(pixel);
 
-                    pickedR = Color.red(pixel);
-                    pickedG = Color.green(pixel);
-                    pickedB = Color.blue(pixel);
+                String mask = "Maszk";
 
-                    textColor.setBackgroundColor(Color.rgb(pickedR,pickedG,pickedB));
-                    String toWrite = "RGB("+pickedR+";"+pickedG+";"+pickedB+")";
-                    if(pickedR < 128 && pickedG < 128 && pickedB < 128){
-                        textColor.setTextColor(Color.rgb(255,255,255));
-                    }
-                    else textColor.setTextColor(Color.rgb(0,0,0));
-                    textColor.setText(toWrite);
+                txtColor.setBackgroundColor(Color.rgb(pickedR, pickedG, pickedB));
+                String toWrite = "RGB(" + pickedR + ";" + pickedG + ";" + pickedB + ")";
+                if (pickedR < 128 && pickedG < 128 && pickedB < 128) {
+                    txtColor.setTextColor(Color.rgb(255, 255, 255));
+                } else txtColor.setTextColor(Color.rgb(0, 0, 0));
+                if (pickedR == 255 && pickedG == 0 && pickedB == 0) txtColor.setText(mask);
+                else txtColor.setText(toWrite);
 
-//                    Toast.makeText(AnalyzeActivity.this, toWrite, Toast.LENGTH_SHORT).show();
+            } else {
+                txtColor.setVisibility(View.INVISIBLE);
+            }
+            background.setDrawingCacheEnabled(false);
+            return true;
+        });
+        skbTolerance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tolerance = progress;
+                String tol = "Tolerancia: " + tolerance;
+                txtColor.setText(tol);
+            }
 
-                }
-                return true;
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                txtColor.setVisibility(View.VISIBLE);
+                txtColor.setBackgroundColor(Color.rgb(255, 255, 255));
+                txtColor.setTextColor(Color.rgb(0, 0, 0));
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                txtColor.setVisibility(View.INVISIBLE);
             }
         });
-        btnMark.setOnTouchListener(new View.OnTouchListener(){
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent){
+        btnMark.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                if (
+                    pickedR == 255 &&
+                    pickedG == 0 &&
+                    pickedB == 0
+                ) {
+                    Toast.makeText(this, "Nem maszkolható felület.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Bitmap bitmap = Bitmap.createBitmap(layers.get(layers.size() - 1), imageWidth, imageHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+                    Bitmap marked;
 
-                textColor.setText("Calculating...");
+                    int bitmapWidth = bitmap.getWidth();
+                    int bitmapHeight = bitmap.getHeight();
 
+                    int t = tolerance;
 
-                Bitmap bitmap = Bitmap.createBitmap(layers.get(layers.size() - 1));
-                Bitmap marked = Bitmap.createBitmap( bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-//                marked.eraseColor(Color.rgb(255, 0, 0));
+                    int[] old = new int[bitmapWidth * bitmapHeight];
+                    int[] news = new int[bitmapWidth * bitmapHeight];
 
-//                if(marked.getWidth() > 1280 || marked.getHeight() > 720){
-//
-//                    marked = Bitmap.createScaledBitmap(marked, 1280,720, false);
-//
-//                }
+                    bitmap.getPixels(old, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight);
 
-                int threshold = 20;
-
-                int bitmapWidth = bitmap.getWidth();
-                int bitmapHeight = bitmap.getHeight();
-                int count = 0;
-                int pixel = 0;
-
-                for(int i = 0; i < bitmapWidth; i++) {
-                    for (int j = 0; j < bitmapHeight; j++) {
-
-                        pixel = bitmap.getPixel(i,j);
-                        if( Color.red(pixel)   <= pickedR + threshold ) {
-                            if( Color.red(pixel)   >= pickedR - threshold ) {
-                                if( Color.green(pixel) <= pickedG + threshold ) {
-                                    if( Color.green(pixel) >= pickedG - threshold ) {
-                                        if( Color.blue(pixel)  <= pickedB + threshold ) {
-                                            if( Color.blue(pixel)  >= pickedB - threshold ) {
-                                                marked.setPixel(i, j, Color.rgb(255, 0, 0));
-                                                count++;
-                                            }else marked.setPixel(i, j, Color.rgb(Color.red(pixel), Color.green(pixel), Color.blue(pixel)));
-                                        }else marked.setPixel(i, j, Color.rgb(Color.red(pixel), Color.green(pixel), Color.blue(pixel)));
-                                    }else marked.setPixel(i, j, Color.rgb(Color.red(pixel), Color.green(pixel), Color.blue(pixel)));
-                                }else marked.setPixel(i, j, Color.rgb(Color.red(pixel), Color.green(pixel), Color.blue(pixel)));
-                            }else marked.setPixel(i, j, Color.rgb(Color.red(pixel), Color.green(pixel), Color.blue(pixel)));
-                        }else marked.setPixel(i, j, Color.rgb(Color.red(pixel), Color.green(pixel), Color.blue(pixel)));
+                    for (int i = 0; i < old.length; i++) {
+                        if (Color.red(old[i]) <= pickedR + t) {
+                            if (Color.red(old[i]) >= pickedR - t) {
+                                if (Color.green(old[i]) <= pickedG + t) {
+                                    if (Color.green(old[i]) >= pickedG - t) {
+                                        if (Color.blue(old[i]) <= pickedB + t) {
+                                            if (Color.blue(old[i]) >= pickedB - t) {
+                                                news[i] = Color.rgb(255, 0, 0);
+                                            } else
+                                                news[i] = Color.rgb(Color.red(old[i]), Color.green(old[i]), Color.blue(old[i]));
+                                        } else
+                                            news[i] = Color.rgb(Color.red(old[i]), Color.green(old[i]), Color.blue(old[i]));
+                                    } else
+                                        news[i] = Color.rgb(Color.red(old[i]), Color.green(old[i]), Color.blue(old[i]));
+                                } else
+                                    news[i] = Color.rgb(Color.red(old[i]), Color.green(old[i]), Color.blue(old[i]));
+                            } else
+                                news[i] = Color.rgb(Color.red(old[i]), Color.green(old[i]), Color.blue(old[i]));
+                        } else
+                            news[i] = Color.rgb(Color.red(old[i]), Color.green(old[i]), Color.blue(old[i]));
                     }
+
+                    marked = Bitmap.createBitmap(news, bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
+
+                    int[] layer = new int[imageWidth * imageHeight];
+                    marked.getPixels(layer, 0, imageWidth, 0, 0, imageWidth, imageHeight);
+                    layers.add(layer);
+
+                    background.setImageBitmap(marked);
+                    background.setDrawingCacheEnabled(true);
+                    background.buildDrawingCache(true);
+                    background.setDrawingCacheEnabled(false);
                 }
-//                for(int i = 0; i < 5; i++) {
-//                    for (int j = 0; j < 200; j++) {
-//                        marked.setPixel(i, j, Color.rgb(255, 0, 0));
-//                        count++;
-//                    }
-//                }
-
-
-                layers.add(marked);
-                background.setImageBitmap(marked);
-
-                double percent = count / ((bitmapWidth*bitmapHeight)/100) ;
-
-                String text = count + "/" + ((bitmapWidth*bitmapHeight)/100) + "=" + percent+"%";
-
-                textColor.setText(text);
-
-                return true;
             }
+            return true;
         });
-        btnUndo.setOnTouchListener(new View.OnTouchListener(){
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent){
-
-                if(layers.size() - 1 < 1) return true;
+        btnUndo.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                if (layers.size() - 1 < 1) return true;
 
                 layers.remove(layers.size() - 1);
-                background.setImageBitmap(layers.get(layers.size() - 1));
-
-                return true;
+                background.setImageBitmap(Bitmap.createBitmap(layers.get(layers.size() - 1), imageWidth, imageHeight, Bitmap.Config.ARGB_8888));
+                background.setDrawingCacheEnabled(true);
+                background.buildDrawingCache(true);
+                background.setDrawingCacheEnabled(false);
             }
+
+            return true;
         });
-    }
+        btnDone.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN
+                    || motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                int c = 0;
 
-    private Bitmap rotateBitmap(Bitmap original, float degrees) {
+                for (int i : layers.get(layers.size() - 1)) {
+                    if (Color.red(i) == 255 &&
+                            Color.green(i) == 0 &&
+                            Color.blue(i) == 0
+                            ) c++;
+                }
 
-        Matrix matrix = new Matrix();
-        matrix.preRotate(degrees);
+                int a = imageHeight * imageWidth;
 
-        Bitmap rotatedBitmap = Bitmap.createBitmap(original, 0, 0, original.getWidth(), original.getHeight(), matrix, true);
+                float p = c * 100.0f / a;
+                p = (Math.round(p * 100.0f) / 100.0f);
+                Intent goToChart = new Intent(this, ChartActivity.class);
+                goToChart.putExtra("PERCENTAGE", p);
+                goToChart.putExtra("WIDTH", imageWidth);
+                goToChart.putExtra("HEIGHT", imageHeight);
 
-        return rotatedBitmap;
+                layer = layers.get(layers.size() - 1);
+                goToChart.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+                startActivity(goToChart);
+            }
+
+            return true;
+        });
     }
 }

@@ -15,13 +15,8 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        buttonMenuAnalyze = (Button) findViewById(R.id.buttonMenuAnalyze);
-        buttonMenuAnalyze.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToAnalyze();
-            }
-        });
+        buttonMenuAnalyze = findViewById(R.id.btnMenuAnalyze);
+        buttonMenuAnalyze.setOnClickListener(view -> goToAnalyze());
     }
 
     public void goToAnalyze(){

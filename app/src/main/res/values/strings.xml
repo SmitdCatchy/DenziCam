@@ -4,6 +4,8 @@
 
     <string name="menu_analyze">Mérés</string>
     <string name="menu_description_logo">logo</string>
+    <string name="menu_help">Segédlet</string>
+    <string name="menu_archive">Archívum</string>
 
     <string name="analyze_take">Kép bevitele</string>
     <string name="analyze_color">Szín</string>
@@ -30,8 +32,11 @@
     <string name="result_save">Mentés</string>
     <string name="result_dismiss">Elvetés</string>
     <string name="result_gps">Koordináták hozzárendelése</string>
-    <string name="menu_help">Segédlet</string>
-    <string name="menu_archive">Archívum</string>>
+
+
+    <string name="archive_title">Title</string>
+    <string name="dummy">dummy</string>
+    <string name="archive_empty">Nincsenek elmentett mérések.\nVissza a Főmenübe.</string>>
 
     <string-array name="trees">
         <item>Ismeretlen</item>

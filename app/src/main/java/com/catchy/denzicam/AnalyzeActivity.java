@@ -59,15 +59,13 @@ public class AnalyzeActivity extends AppCompatActivity {
 
         background = findViewById(R.id.imgAnalyzeBackground);
         txtColor = findViewById(R.id.txtAnalyzeColor);
-
         btnPhoto = findViewById(R.id.btnAnalyzeTakePhoto);
         btnPhoto.setOnClickListener(view -> dispatchTakePictureIntent());
-
         btnDone = findViewById(R.id.btnAnalyzeDone);
         btnMark = findViewById(R.id.btnAnalyzeMark);
         btnUndo = findViewById(R.id.btnAnalyzeUndo);
-
         skbTolerance = findViewById(R.id.skbAnalyze);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) skbTolerance.setMin(10);
         skbTolerance.setMax(100);
         skbTolerance.setProgress(tolerance);

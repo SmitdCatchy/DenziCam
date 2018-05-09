@@ -8,20 +8,27 @@ import android.widget.Button;
 
 public class MenuActivity extends AppCompatActivity {
 
-    private Button buttonMenuAnalyze;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        buttonMenuAnalyze = findViewById(R.id.btnMenuAnalyze);
-        buttonMenuAnalyze.setOnClickListener(view -> goToAnalyze());
-    }
+        Button btnMenu = findViewById(R.id.btnMenuAnalyze);
+        Button btnArchive = findViewById(R.id.btnMenuArchive);
+        Button btnHelp = findViewById(R.id.btnMenuHelp);
 
-    public void goToAnalyze(){
-        Intent intent = new Intent(this, AnalyzeActivity.class);
-        startActivity(intent);
+        btnMenu.setOnClickListener(view -> {
+            Intent intent = new Intent(this, AnalyzeActivity.class);
+            startActivity(intent);
+        });
+        btnArchive.setOnClickListener(view -> {
+            Intent intent = new Intent(this, ArchiveActivity.class);
+            startActivity(intent);
+        });
+        btnHelp.setOnClickListener(view -> {
+            Intent intent = new Intent(this, HelpActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override

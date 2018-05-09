@@ -40,7 +40,7 @@ public class IO {
             FileInputStream fis = cx.openFileInput(FILE_NAME);
             int size = fis.available();
             byte[] buffer = new byte[size];
-            fis.read(buffer)
+            int read = fis.read(buffer);
             fis.close();
             toReturn = new String(buffer);
         } catch (Exception e){

@@ -22,7 +22,7 @@ public class Result {
     private double longitude;
     private Date date;
 
-    public Result(String n, int avg, float per, float oxy, float car, double lat, double lon, Date d){
+    Result(String n, int avg, float per, float oxy, float car, double lat, double lon, Date d){
 
         name = n;
         average = avg;
@@ -35,7 +35,7 @@ public class Result {
 
     }
 
-    public Result(String raw){
+    Result(String raw){
         List<String> data = Arrays.asList(raw.split("\\s*,\\s*"));
         name = data.get(0);
         average = Integer.parseInt(data.get(1));

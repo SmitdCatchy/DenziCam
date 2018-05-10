@@ -89,7 +89,7 @@ public class AnalyzeActivity extends AppCompatActivity {
 
         Intent chooser = new Intent(Intent.ACTION_CHOOSER);
         chooser.putExtra(Intent.EXTRA_INTENT, galleryIntent);
-        chooser.putExtra(Intent.EXTRA_TITLE, "Válasz az alábbiak közül");
+        chooser.putExtra(Intent.EXTRA_TITLE, "Válasszon az alábbiak közül");
 
 
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

@@ -24,7 +24,7 @@
     <string name="chart_perimeter_hint">A fa kerülete cm-ben</string>
 
     <string name="result_title">Eredmények</string>
-    <string name="result_average">A fák átlag életkora: </string>
+    <string name="result_average">Az erdő életkora: </string>
     <string name="result_percentage">A lombkorona borítása: </string>
     <string name="result_oxygen">Megtermelt oxigén: </string>
     <string name="result_carbon">Megkötött széndioxid: </string>
@@ -65,6 +65,7 @@
         <item>Mezei szil</item>
         <item>Nagylevelű hárs</item>
         <item>Nyugati ostorfa</item>
+        <item>Platán</item>
         <item>Vadcseresznye</item>
         <item>Vénic szil</item>
         <item>Virágos kőris</item>

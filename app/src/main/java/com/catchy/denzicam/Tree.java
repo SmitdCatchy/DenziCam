@@ -335,6 +335,19 @@ public class Tree {
                 else if (perimeter < 284)   this.age = 90;
                 else this.age = 96;
                 break;
+            case "Platán":
+                this.name = name;
+                if      (perimeter <= 33)   this.age = 45;
+                else if (perimeter < 65)    this.age = 15;
+                else if (perimeter < 96)    this.age = 23;
+                else if (perimeter < 127)   this.age = 30;
+                else if (perimeter < 159)   this.age = 35;
+                else if (perimeter < 190)   this.age = 40;
+                else if (perimeter < 222)   this.age = 45;
+                else if (perimeter < 253)   this.age = 53;
+                else if (perimeter < 284)   this.age = 58;
+                else this.age = 65;
+                break;
             case "Vadcseresznye":
                 this.name = name;
                 if      (perimeter <= 33)   this.age = 45;

@@ -226,7 +226,7 @@ public class AnalyzeActivity extends AppCompatActivity {
         });
         btnMask.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                if (layers.size() >= 10) {
+                if (layers.size() > 10) {
                     Toast.makeText(this, "Tíznél több maszkolási réteget nem lehet alkalmazni.", Toast.LENGTH_SHORT).show();
                 } else {
                     if (

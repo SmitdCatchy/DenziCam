@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,10 +15,8 @@ import java.util.List;
 public class ArchiveActivity extends AppCompatActivity {
 
     private ArrayList<Result> results;
-
     private BasicAdapter adapter;
-
-    private TextView btnEmpty;
+    private Button btnEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +24,11 @@ public class ArchiveActivity extends AppCompatActivity {
         setContentView(R.layout.activity_archive);
 
         btnEmpty = findViewById(R.id.btnArchiveEmpty);
+
         btnEmpty.setVisibility(View.INVISIBLE);
+        btnEmpty.setOnClickListener(view -> finish());
 
         loadResults();
-        buildView();
-
-        btnEmpty.setOnClickListener(view -> finish());
     }
 
     private void loadResults() {
@@ -46,6 +44,7 @@ public class ArchiveActivity extends AppCompatActivity {
                 Result toAdd = new Result(r);
                 results.add(toAdd);
             }
+            buildView();
         }
         else{
             btnEmpty.setVisibility(View.VISIBLE);
@@ -55,7 +54,6 @@ public class ArchiveActivity extends AppCompatActivity {
     private void buildView(){
 
         RecyclerView view = findViewById(R.id.rvArchive);
-        view.setHasFixedSize(true);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         adapter = new BasicAdapter(results);
 

@@ -77,7 +77,11 @@ public class ChartActivity extends AppCompatActivity {
 
         btnAdd.setOnClickListener(view -> addTree());
         btnRemove.setOnClickListener(view -> removeTree());
-        btnResults.setOnClickListener(view -> calcResult());
+        btnResults.setOnClickListener(view -> {
+            Intent goToResult = new Intent(this, ResultActivity.class);
+            goToResult.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(goToResult);
+        });
 
     }
 
@@ -107,12 +111,6 @@ public class ChartActivity extends AppCompatActivity {
         }
         txtTrees.setText(toPrint.toString());
 
-    }
-
-    private void calcResult() {
-        Intent goToResult = new Intent(this, ResultActivity.class);
-        goToResult.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(goToResult);
     }
 
 }

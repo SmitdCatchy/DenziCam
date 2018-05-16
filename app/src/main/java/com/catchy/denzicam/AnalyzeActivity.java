@@ -31,7 +31,7 @@ public class AnalyzeActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Button btnPhoto;
     private Button btnDone;
-    private Button btnMark;
+    private Button btnMask;
     private Button btnUndo;
     private ImageView background;
     private TextView txtColor;
@@ -62,7 +62,7 @@ public class AnalyzeActivity extends AppCompatActivity {
         btnPhoto = findViewById(R.id.btnAnalyzeTakePhoto);
         btnPhoto.setOnClickListener(view -> dispatchTakePictureIntent());
         btnDone = findViewById(R.id.btnAnalyzeDone);
-        btnMark = findViewById(R.id.btnAnalyzeMark);
+        btnMask = findViewById(R.id.btnAnalyzeMask);
         btnUndo = findViewById(R.id.btnAnalyzeUndo);
         skbTolerance = findViewById(R.id.skbAnalyze);
 
@@ -71,7 +71,7 @@ public class AnalyzeActivity extends AppCompatActivity {
         skbTolerance.setProgress(tolerance);
 
         btnDone.setVisibility(View.INVISIBLE);
-        btnMark.setVisibility(View.INVISIBLE);
+        btnMask.setVisibility(View.INVISIBLE);
         btnUndo.setVisibility(View.INVISIBLE);
         skbTolerance.setVisibility(View.INVISIBLE);
 
@@ -162,16 +162,16 @@ public class AnalyzeActivity extends AppCompatActivity {
                 layers.add(layer);
                 background.setImageBitmap(bitmap);
 
-                initiateMarking();
+                initiateMasking();
             } else Toast.makeText(this, "Hiba merült fel a kép betöltése során.", Toast.LENGTH_SHORT).show();
         } else Toast.makeText(this, "Hiba merült fel a kép betöltése során.", Toast.LENGTH_SHORT).show();
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void initiateMarking() {
+    private void initiateMasking() {
         btnPhoto.setVisibility(View.INVISIBLE);
         btnDone.setVisibility(View.VISIBLE);
-        btnMark.setVisibility(View.VISIBLE);
+        btnMask.setVisibility(View.VISIBLE);
         btnUndo.setVisibility(View.VISIBLE);
         skbTolerance.setVisibility(View.VISIBLE);
         background.setOnTouchListener((view, motionEvent) -> {
@@ -224,37 +224,42 @@ public class AnalyzeActivity extends AppCompatActivity {
                 txtColor.setVisibility(View.INVISIBLE);
             }
         });
-        btnMark.setOnTouchListener((view, motionEvent) -> {
+        btnMask.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                if (
-                    pickedR == 255 &&
-                    pickedG == 0 &&
-                    pickedB == 0
-                ) {
-                    Toast.makeText(this, "Nem maszkolható felület.", Toast.LENGTH_SHORT).show();
+                if (layers.size() >= 10) {
+                    Toast.makeText(this, "Tíznél több maszkolási réteget nem lehet alkalmazni.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Bitmap bitmap = Bitmap.createBitmap(layers.get(layers.size() - 1), imageWidth, imageHeight, Bitmap.Config.ARGB_8888);
-                    bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-                    Bitmap marked;
+                    if (
+                            pickedR == 255 &&
+                                    pickedG == 0 &&
+                                    pickedB == 0
+                            ) {
+                        Toast.makeText(this, "Nem maszkolható felület.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Bitmap bitmap = Bitmap.createBitmap(layers.get(layers.size() - 1), imageWidth, imageHeight, Bitmap.Config.ARGB_8888);
+                        bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+                        Bitmap masked;
 
-                    int bitmapWidth = bitmap.getWidth();
-                    int bitmapHeight = bitmap.getHeight();
+                        int bitmapWidth = bitmap.getWidth();
+                        int bitmapHeight = bitmap.getHeight();
 
-                    int t = tolerance;
+                        int t = tolerance;
 
-                    int[] old = new int[bitmapWidth * bitmapHeight];
-                    int[] news = new int[bitmapWidth * bitmapHeight];
+                        int[] old = new int[bitmapWidth * bitmapHeight];
+                        int[] news = new int[bitmapWidth * bitmapHeight];
 
-                    bitmap.getPixels(old, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight);
+                        bitmap.getPixels(old, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight);
 
-                    for (int i = 0; i < old.length; i++) {
-                        if (Color.red(old[i]) <= pickedR + t) {
-                            if (Color.red(old[i]) >= pickedR - t) {
-                                if (Color.green(old[i]) <= pickedG + t) {
-                                    if (Color.green(old[i]) >= pickedG - t) {
-                                        if (Color.blue(old[i]) <= pickedB + t) {
-                                            if (Color.blue(old[i]) >= pickedB - t) {
-                                                news[i] = Color.rgb(255, 0, 0);
+                        for (int i = 0; i < old.length; i++) {
+                            if (Color.red(old[i]) <= pickedR + t) {
+                                if (Color.red(old[i]) >= pickedR - t) {
+                                    if (Color.green(old[i]) <= pickedG + t) {
+                                        if (Color.green(old[i]) >= pickedG - t) {
+                                            if (Color.blue(old[i]) <= pickedB + t) {
+                                                if (Color.blue(old[i]) >= pickedB - t) {
+                                                    news[i] = Color.rgb(255, 0, 0);
+                                                } else
+                                                    news[i] = Color.rgb(Color.red(old[i]), Color.green(old[i]), Color.blue(old[i]));
                                             } else
                                                 news[i] = Color.rgb(Color.red(old[i]), Color.green(old[i]), Color.blue(old[i]));
                                         } else
@@ -265,20 +270,19 @@ public class AnalyzeActivity extends AppCompatActivity {
                                     news[i] = Color.rgb(Color.red(old[i]), Color.green(old[i]), Color.blue(old[i]));
                             } else
                                 news[i] = Color.rgb(Color.red(old[i]), Color.green(old[i]), Color.blue(old[i]));
-                        } else
-                            news[i] = Color.rgb(Color.red(old[i]), Color.green(old[i]), Color.blue(old[i]));
+                        }
+
+                        masked = Bitmap.createBitmap(news, bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
+
+                        int[] layer = new int[imageWidth * imageHeight];
+                        masked.getPixels(layer, 0, imageWidth, 0, 0, imageWidth, imageHeight);
+                        layers.add(layer);
+
+                        background.setImageBitmap(masked);
+                        background.setDrawingCacheEnabled(true);
+                        background.buildDrawingCache(true);
+                        background.setDrawingCacheEnabled(false);
                     }
-
-                    marked = Bitmap.createBitmap(news, bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
-
-                    int[] layer = new int[imageWidth * imageHeight];
-                    marked.getPixels(layer, 0, imageWidth, 0, 0, imageWidth, imageHeight);
-                    layers.add(layer);
-
-                    background.setImageBitmap(marked);
-                    background.setDrawingCacheEnabled(true);
-                    background.buildDrawingCache(true);
-                    background.setDrawingCacheEnabled(false);
                 }
             }
             return true;

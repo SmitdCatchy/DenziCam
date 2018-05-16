@@ -6,9 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 public class IO {
-
     private static final String FILE_NAME = "saves.dcs";
-
     public static  void save(Context cx, String text){
         try{
             FileOutputStream fos = cx.openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
@@ -33,7 +31,6 @@ public class IO {
             e.printStackTrace();
         }
     }
-
     public static String load(Context cx){
         String toReturn = "";
         try{

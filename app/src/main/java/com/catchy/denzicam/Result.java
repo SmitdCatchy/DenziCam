@@ -1,15 +1,12 @@
 package com.catchy.denzicam;
 
 import android.annotation.SuppressLint;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class Result {
 
@@ -54,8 +51,7 @@ public class Result {
     }
 
     public String toString(){
-        @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("yyyy.MM.dd.");
-        String sDate =  df.format(date);
+        String sDate =  getStringDate();
         return name + ",\n" +
             average + "," +
             percentage + "," +
@@ -77,20 +73,13 @@ public class Result {
         }
         return toReturn;
     }
-
     public String getStringDate(){
         @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("yyyy.MM.dd.");
         return df.format(date);
     }
-
     public String getName() {
         return name;
     }
-
-    public int getAverage() {
-        return average;
-    }
-
     public Date getDate() {
         return date;
     }

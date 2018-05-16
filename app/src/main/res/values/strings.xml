@@ -9,7 +9,7 @@
 
     <string name="analyze_take">Kép bevitele</string>
     <string name="analyze_color">Szín</string>
-    <string name="analyze_mark">Maszk</string>
+    <string name="analyze_mask">Maszk</string>
     <string name="analyze_undo">Törlés</string>
     <string name="analyze_done">Tovább</string>
 

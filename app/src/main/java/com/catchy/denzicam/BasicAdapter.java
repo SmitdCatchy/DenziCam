@@ -12,15 +12,10 @@ import java.util.ArrayList;
 public class BasicAdapter extends RecyclerView.Adapter<BasicAdapter.BasicViewHolder> {
 
     private ArrayList<Result> list;
-
     private OnItemClickListener listener;
 
     public interface OnItemClickListener{
         void onItemDelete(int position);
-    }
-
-    public void setOnItemClickListener(OnItemClickListener l){
-        listener = l;
     }
 
     public static class BasicViewHolder extends RecyclerView.ViewHolder{
@@ -50,6 +45,10 @@ public class BasicAdapter extends RecyclerView.Adapter<BasicAdapter.BasicViewHol
 
     BasicAdapter(ArrayList<Result> l) {
         list = l;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener l){
+        listener = l;
     }
 
     @Override

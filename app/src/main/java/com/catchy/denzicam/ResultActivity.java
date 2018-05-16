@@ -29,8 +29,8 @@ public class ResultActivity extends AppCompatActivity {
     private TextView txtOxygen;
     private TextView txtCarbon;
     private TextView txtGPS;
-
     private EditText txtName;
+
     private int average;
     private float oxygen;
     private float carbon;
@@ -59,6 +59,7 @@ public class ResultActivity extends AppCompatActivity {
 
         analyze();
         requestPermissions();
+
         btnGPS.setOnClickListener(view -> getLocation());
         btnSave.setOnClickListener(view -> {
             Toast.makeText(this, "Eredmények elmentve", Toast.LENGTH_SHORT).show();
@@ -89,8 +90,12 @@ public class ResultActivity extends AppCompatActivity {
         }
 
         average = Math.round((s) / c);
-        oxygen = Math.round(Tree.getOxygen(average) * percentage) / 100.0f;
-        carbon = Math.round(Tree.getCarbon(average) * percentage) / 100.0f;
+
+        float turfOxigen = (100 - percentage) * 15;
+        float turfCarbon = (100 - percentage) * 20;
+
+        oxygen = Math.round(Tree.getOxygen(average) * percentage + turfOxigen) / 100.0f;
+        carbon = Math.round(Tree.getCarbon(average) * percentage + turfCarbon) / 100.0f;
 
         String toDisplay = getString(R.string.result_average) + " " + average + ".";
         txtAverage.setText(toDisplay);

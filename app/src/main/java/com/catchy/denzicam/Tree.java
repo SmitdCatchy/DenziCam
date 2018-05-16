@@ -5,10 +5,6 @@ public class Tree {
     private int age;
 
     Tree(String name, int perimeter){
-        amendTree(name, perimeter);
-    }
-
-    private void amendTree( String name, int perimeter){
         switch (name){
             case "Akác":
                 this.name = name;
